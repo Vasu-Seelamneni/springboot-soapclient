@@ -1,0 +1,95 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://www.example.com/banking" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.com/banking" targetNamespace="http://www.example.com/banking">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.example.com/banking">
+            <xs:element name="CreateAccountRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="accountNumber" type="xs:string"/>
+                        <xs:element name="accountHolderName" type="xs:string"/>
+                        <xs:element name="balance" type="xs:decimal"/>
+                        <xs:element name="type" type="tns:AccountType"/>
+                        <!-- create this as enum type -->
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:simpleType name="AccountType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Current"/>
+                    <xs:enumeration value="Savings"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="CreateAccountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="status" type="xs:string"/>
+                        <xs:element name="accountNumber" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAccountBalanceRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="accountNumber" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAccountBalanceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="accountHolderName" type="xs:string"/>
+                        <xs:element name="balance" type="xs:decimal"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <!--  Add other requests and responses similarly  -->
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="CreateAccountRequest">
+        <wsdl:part element="tns:CreateAccountRequest" name="CreateAccountRequest"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="CreateAccountResponse">
+        <wsdl:part element="tns:CreateAccountResponse" name="CreateAccountResponse"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="GetAccountBalanceRequest">
+        <wsdl:part element="tns:GetAccountBalanceRequest" name="GetAccountBalanceRequest"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="GetAccountBalanceResponse">
+        <wsdl:part element="tns:GetAccountBalanceResponse" name="GetAccountBalanceResponse"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="BankingPort">
+        <wsdl:operation name="CreateAccount">
+            <wsdl:input message="tns:CreateAccountRequest" name="CreateAccountRequest"> </wsdl:input>
+            <wsdl:output message="tns:CreateAccountResponse" name="CreateAccountResponse"> </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetAccountBalance">
+            <wsdl:input message="tns:GetAccountBalanceRequest" name="GetAccountBalanceRequest"> </wsdl:input>
+            <wsdl:output message="tns:GetAccountBalanceResponse" name="GetAccountBalanceResponse"> </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BankingPortSoap11" type="tns:BankingPort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="CreateAccount">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="CreateAccountRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="CreateAccountResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetAccountBalance">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="GetAccountBalanceRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetAccountBalanceResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="BankingPortService">
+        <wsdl:port binding="tns:BankingPortSoap11" name="BankingPortSoap11">
+            <soap:address location="http://localhost:8041/ws"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
